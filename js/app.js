@@ -1,6 +1,6 @@
 // Game settings
 var settings = {
-    board: {col: 5, row: 6},
+    board: {numCols: 5, numRows: 6},
     tile: {width: 101, height: 83},
     enemy: {movement: 60,   // px, the greater the faster
             count: 5}
@@ -74,12 +74,12 @@ Player.prototype.handleInput = function(direction) {
             }
             break;
         case 'right':
-            if (this.col < settings.board.col - 1) {    // 0-index based
+            if (this.col < settings.board.numCols - 1) {    // 0-index based
                 this.col++;
             }
             break;
         case 'down':
-            if (this.row < settings.board.row - 1) {    // 0-index based
+            if (this.row < settings.board.numRows - 1) {    // 0-index based
                 this.row++;
             }
             break;
@@ -90,8 +90,8 @@ Player.prototype.handleInput = function(direction) {
 
 // Init/Reset player position
 Player.prototype.init = function() {
-    this.col = Math.floor(settings.board.col / 2);
-    this.row = settings.board.row - 1;
+    this.col = Math.floor(settings.board.numCols / 2);
+    this.row = settings.board.numRows - 1;
 }
 
 // Now instantiate your objects.
