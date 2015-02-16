@@ -104,20 +104,9 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
-        /* This array holds the relative URL to the image used
-         * for that particular row of the game level.
-         */
-        var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
-            ],
-            numRows = settings.board.numRows,
+        var numRows = settings.board.numRows,
             numCols = settings.board.numCols,
-            row, col;
+            row, col, rawImage;
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -134,7 +123,6 @@ var Engine = (function(global) {
                  */
                  // The top row is water, bottom two rows are grass, in-between
                  // are stones
-                var rowImage;
                 if (row == 0) {
                     rowImage = 'images/water-block.png';
                 } else if ( row >= settings.board.numRows - 2) {
@@ -147,7 +135,6 @@ var Engine = (function(global) {
                               row * settings.tile.height);
             }
         }
-
 
         renderEntities();
     }
@@ -176,7 +163,7 @@ var Engine = (function(global) {
     }
 
     /* This function checks if player and enemies collide
-     *
+     * If collides, set player to start position.
      */
     function checkCollisions() {
         if (allEnemies.some(player.isCollide, player)) {

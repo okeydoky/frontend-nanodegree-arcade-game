@@ -7,6 +7,8 @@ var settings = {
 };
 
 // Enemies our player must avoid
+// Enemy will appear in random row and random speed.
+// Furthermore, it moves in different directions in alteranting rows
 // @Constructor
 var Enemy = function() {
     this.reset();
@@ -39,7 +41,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-// Reset the enemy position
+// Reset/init the enemy properties
 Enemy.prototype.reset = function() {
     this.speed = getRandomInt(1, 6);  // 5 possible speed
     // random row between 1 and (board rows - 1 water - 2 grass)
@@ -54,9 +56,7 @@ Enemy.prototype.reset = function() {
     this.y = this.row * settings.tile.height + Enemy.OFFSET;
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Player class 
 // @Constructor
 var Player = function() {
     this.sprite = 'images/char-boy.png';
@@ -66,15 +66,19 @@ var Player = function() {
 // offse when rendering the img; relative to tile image
 Player.OFFSET = -10;
 
+// required for game engine
 Player.prototype.update = function(dt) {
-
+    // no-op
 }
 
+// Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     this.calculateXY();
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+// handle player keyboard input
+// player can't move outside the board
 Player.prototype.handleInput = function(direction) {
     switch (direction) {
         case 'left':
@@ -102,13 +106,14 @@ Player.prototype.handleInput = function(direction) {
     }
 }
 
-// Reset player position
+// Reset/init player position
 Player.prototype.reset = function() {
     this.col = Math.floor(settings.board.numCols / 2);
     this.row = settings.board.numRows - 1;
     this.calculateXY();
 }
 
+// Calculate x, y based on row and column value
 Player.prototype.calculateXY = function() {
     this.x = this.col * settings.tile.width;
     this.y = this.row * settings.tile.height + Player.OFFSET;
