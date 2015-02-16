@@ -80,7 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -161,6 +161,15 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+    }
+
+    /* This function checks if player and enemies collide
+     *
+     */
+    function checkCollisions() {
+        if (allEnemies.some(player.isCollide, player)) {
+            player.reset();
+        }
     }
 
     /* Go ahead and load all of the images we know we're going to need to

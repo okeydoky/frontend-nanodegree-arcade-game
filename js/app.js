@@ -2,7 +2,7 @@
 var settings = {
     board: {numCols: 5, numRows: 6},
     tile: {width: 101, height: 83},
-    enemy: {movement: 60,   // px, the greater the faster
+    enemy: {movement: 80,   // px, the greater the faster
             count: 5}
 };
 
@@ -14,7 +14,7 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.init();
+    this.reset();
 }
 
 // Update the enemy's position, required method for game
@@ -26,7 +26,7 @@ Enemy.prototype.update = function(dt) {
     this.x += settings.enemy.movement * this.speed * dt;
 
     if (this.x > ctx.canvas.width) {
-        this.init();
+        this.reset();
     }
 }
 
@@ -36,8 +36,8 @@ Enemy.prototype.render = function() {
 
 }
 
-// Init/Reset the enemy position
-Enemy.prototype.init = function() {
+// Reset the enemy position
+Enemy.prototype.reset = function() {
     this.speed = getRandomInt(1, 6);  // 5 possible speed
     this.x = -2 * settings.tile.width;
     this.y = 63 + getRandomInt(0, 3) * settings.tile.height;  // random row between 1-3
@@ -48,7 +48,7 @@ Enemy.prototype.init = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.init();
+    this.reset();
 }
 
 Player.prototype.update = function(dt) {
@@ -56,9 +56,8 @@ Player.prototype.update = function(dt) {
 }
 
 Player.prototype.render = function() {
-    var x = this.col * settings.tile.width;
-    var y = this.row * settings.tile.height - 10;
-    ctx.drawImage(Resources.get(this.sprite), x, y);
+    this.calculateXY();
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
 Player.prototype.handleInput = function(direction) {
@@ -88,10 +87,29 @@ Player.prototype.handleInput = function(direction) {
     }
 }
 
-// Init/Reset player position
-Player.prototype.init = function() {
+// Reset player position
+Player.prototype.reset = function() {
     this.col = Math.floor(settings.board.numCols / 2);
     this.row = settings.board.numRows - 1;
+    this.calculateXY();
+}
+
+Player.prototype.calculateXY = function() {
+    this.x = this.col * settings.tile.width;
+    this.y = this.row * settings.tile.height - 10;
+}
+
+Player.prototype.isCollide = function(enemy) {
+    /*
+    if (this.x < enemy.x + settings.tile.width && this.x > enemy.x &&
+        this.y > enemy.y && this.y < enemy.y + settings.tile.height) {
+    */
+    if (Math.abs(this.x - enemy.x) < settings.tile.width &&
+        Math.abs(this.y - enemy.y) < settings.tile.height) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // Now instantiate your objects.
