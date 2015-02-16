@@ -7,6 +7,7 @@ var settings = {
 };
 
 // Enemies our player must avoid
+// @Constructor
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -16,6 +17,9 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.reset();
 }
+
+// offse when rendering the img; relative to tile image
+Enemy.OFFSET = -20;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -40,16 +44,21 @@ Enemy.prototype.render = function() {
 Enemy.prototype.reset = function() {
     this.speed = getRandomInt(1, 6);  // 5 possible speed
     this.x = -2 * settings.tile.width;
-    this.y = 63 + getRandomInt(0, 3) * settings.tile.height;  // random row between 1-3
+    // random row between 1 and (board rows - 1 water - 2 grass)
+    this.y = getRandomInt(1, settings.board.numRows - 2) * settings.tile.height + Enemy.OFFSET;
 }
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+// @Constructor
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.reset();
 }
+
+// offse when rendering the img; relative to tile image
+Player.OFFSET = -10;
 
 Player.prototype.update = function(dt) {
 
@@ -96,16 +105,14 @@ Player.prototype.reset = function() {
 
 Player.prototype.calculateXY = function() {
     this.x = this.col * settings.tile.width;
-    this.y = this.row * settings.tile.height - 10;
+    this.y = this.row * settings.tile.height + Player.OFFSET;
 }
 
+// Check if player collides with an enemy.
+// When calculating y, we need to adjust for offset for more accurate detection
 Player.prototype.isCollide = function(enemy) {
-    /*
-    if (this.x < enemy.x + settings.tile.width && this.x > enemy.x &&
-        this.y > enemy.y && this.y < enemy.y + settings.tile.height) {
-    */
     if (Math.abs(this.x - enemy.x) < settings.tile.width &&
-        Math.abs(this.y - enemy.y) < settings.tile.height) {
+        Math.abs((this.y - Player.OFFSET) - (enemy.y - Enemy.OFFSET)) < settings.tile.height) {
         return true;
     } else {
         return false;
