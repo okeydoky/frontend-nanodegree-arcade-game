@@ -1,9 +1,9 @@
 // Game settings
 var settings = {
-    board: {numCols: 5, numRows: 6},
+    board: {numCols: 7, numRows: 9},
     tile: {width: 101, height: 83},
     enemy: {movement: 80,   // px, the greater the faster
-            count: 5}
+            count: 10}
 };
 
 // Enemies our player must avoid
@@ -109,7 +109,7 @@ Player.prototype.calculateXY = function() {
 }
 
 // Check if player collides with an enemy.
-// When calculating y, we need to adjust for offset for more accurate detection
+// When calculating y, we need to adjust back offset for more accurate detection
 Player.prototype.isCollide = function(enemy) {
     if (Math.abs(this.x - enemy.x) < settings.tile.width &&
         Math.abs((this.y - Player.OFFSET) - (enemy.y - Enemy.OFFSET)) < settings.tile.height) {

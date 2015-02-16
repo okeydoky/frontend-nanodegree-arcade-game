@@ -132,7 +132,19 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                 // The top row is water, bottom two rows are grass, in-between
+                 // are stones
+                var rowImage;
+                if (row == 0) {
+                    rowImage = 'images/water-block.png';
+                } else if ( row >= settings.board.numRows - 2) {
+                    rowImage = 'images/grass-block.png';
+                } else {
+                    rowImage = 'images/stone-block.png';
+                }
+                ctx.drawImage(Resources.get(rowImage), 
+                              col * settings.tile.width, 
+                              row * settings.tile.height);
             }
         }
 
