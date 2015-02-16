@@ -3,18 +3,12 @@ var settings = {
     board: {numCols: 7, numRows: 9},
     tile: {width: 101, height: 83},
     enemy: {movement: 80,   // px, the greater the faster
-            count: 10}
+            count: 12}
 };
 
 // Enemies our player must avoid
 // @Constructor
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
     this.reset();
 }
 
@@ -27,25 +21,37 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x += settings.enemy.movement * this.speed * dt;
-
-    if (this.x > ctx.canvas.width) {
-        this.reset();
+    if (this.reverse) {
+        this.x -= settings.enemy.movement * this.speed * dt;
+        if (this.x + settings.tile.width < 0) {
+            this.reset();
+        }
+    } else {
+        this.x += settings.enemy.movement * this.speed * dt;
+        if (this.x > ctx.canvas.width) {
+            this.reset();
+        }
     }
 }
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-
 }
 
 // Reset the enemy position
 Enemy.prototype.reset = function() {
     this.speed = getRandomInt(1, 6);  // 5 possible speed
-    this.x = -2 * settings.tile.width;
     // random row between 1 and (board rows - 1 water - 2 grass)
-    this.y = getRandomInt(1, settings.board.numRows - 2) * settings.tile.height + Enemy.OFFSET;
+    this.row = getRandomInt(1, settings.board.numRows - 2);  
+    this.reverse = this.row % 2;
+    
+    this.sprite = this.reverse ? 'images/enemy-bug-reverse.png' : 'images/enemy-bug.png';
+    this.x = this.reverse ? 
+             (settings.board.numCols + 2) * settings.tile.width : 
+             -2 * settings.tile.width;
+    
+    this.y = this.row * settings.tile.height + Enemy.OFFSET;
 }
 
 // Now write your own player class

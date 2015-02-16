@@ -1,9 +1,10 @@
 Reference:
  1. MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript
- 
+
 Key takeway:
  1. Encapsulate game behavior in a settings object
  2. Refactor engine.js to use settings so it can be easily customized.
+ 3. Alternating enemy bug moving direction for more challenge.
 
 Play Instruction:
  1. load index.html 
